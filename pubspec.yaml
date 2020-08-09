@@ -34,15 +34,14 @@ dependencies:
   provider: ^4.3.1
   path_provider: ^1.6.11
   wave_slider: ^0.2.0
-  screenshot: ^0.2.0
+  #screenshot: ^0.2.0
+  screenshot: ^0.1.1
   permission_handler: ^5.0.1+1
   image: ^2.1.12
   image_gallery_saver: ^1.5.0
-  image_editor: ^0.7.1 
   font_awesome_flutter: ^8.8.1
   quick_actions: ^0.3.0+1
   radial_button: ^1.0.0
-  extended_image: ^0.9.0
   photofilters: ^2.0.1
   align_positioned: ^1.2.7
   draggable_fab: ^0.1.1
@@ -51,7 +50,9 @@ dependencies:
   flushbar: ^1.10.4
   painter: ^0.4.0
   flutter_material_color_picker: ^1.0.5
-  flutter_colorpicker: ^0.3.4
+  #3flutter_colorpicker: ^0.3.4
+  image_editor_pro: ^1.0.6
+  #video_trimmer: ^0.2.7
 dev_dependencies:
   flutter_test:
     sdk: flutter

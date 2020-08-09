@@ -19,61 +19,61 @@ class _GoogleFontListState extends State<GoogleFontList> {
     ];
     List<TextStyle> googleArabicFont = [
       GoogleFonts.cairo(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.amiri(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.tajawal(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.almarai(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.changa(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.elMessiri(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.lemonada(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.markaziText(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.lalezar(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.reemKufi(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.mada(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.scheherazade(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.lateef(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.mirza(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.rakkas(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.katibeh(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.arefRuqaa(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.vibes(
-        color: Colors.black,
+        color: Colors.white,
       ),
       GoogleFonts.jomhuria(
-        color: Colors.black,
+        color: Colors.white,
       ),
     ];
     return Container(
@@ -86,17 +86,17 @@ class _GoogleFontListState extends State<GoogleFontList> {
                 setFontStyle.changeFontStyle(e.fontFamily);
               },
               child: Container(
+                width: 40,
+                height: 40,
                 alignment: Alignment.center,
-                width: 50,
-                height: 50,
                 margin: EdgeInsets.all(5),
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                  shape: BoxShape.circle,
                 ),
                 child: Text(
-                  'اسم',
+                  'خط',
                   style: e,
                 ),
               ),

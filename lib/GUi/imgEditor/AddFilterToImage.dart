@@ -132,7 +132,7 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
 
                       // final edtedImage = await Navigator.push(
                       //   context,
-                      //   MaterialPageRoute(
+                      //   CupertinoPageRoute(
                       //     builder: (c) => ImageAfterEffects(
                       //       imageFile: imageFile,
                       //     ),

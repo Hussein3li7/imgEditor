@@ -38,7 +38,7 @@ class _HomeAppState extends State<HomeApp> {
         // image = imageLib.copyResize(image, width: 600);
         // await Navigator.push(
         //   context,
-        //   new MaterialPageRoute(
+        //   new CupertinoPageRoute(
         //     builder: (context) => new PhotoSelectorToTryFilter(
         //       title: Text("Photo Filter Example"),
         //       image: image,
@@ -56,7 +56,7 @@ class _HomeAppState extends State<HomeApp> {
       //     if (imgFIle.path != null) {
       //       Navigator.push(
       //         context,
-      //         MaterialPageRoute(
+      //         CupertinoPageRoute(
       //           builder: (c) => Editor2(
       //             imageFile: File.fromRawPath(imgFIle.path),
       //           ),
@@ -78,7 +78,7 @@ class _HomeAppState extends State<HomeApp> {
       if (imageFile != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (c) => PerpareImageToEdit(
               img: imageFile,
             ),

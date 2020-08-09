@@ -2,15 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:radial_button/widget/circle_floating_button.dart';
 import 'package:social_share/social_share.dart';
-import 'package:storesharing/GUi/imgEditor/editedText/editeTextWidget.dart';
-import 'package:storesharing/provider/provider.dart';
 
 class ShareButton extends StatefulWidget {
   File img;
-  ShareButton({this.img});
+  String topColor;
+  String buttomColor;
+  ShareButton({this.img, this.buttomColor, this.topColor});
   @override
   _ShareButtonState createState() => _ShareButtonState();
 }
@@ -27,10 +26,12 @@ class _ShareButtonState extends State<ShareButton> {
         heroTag: UniqueKey(),
         backgroundColor: Colors.redAccent,
         onPressed: () async {
+          print(widget.topColor);
+          print(widget.buttomColor);
           SocialShare.shareInstagramStory(
             widget.img.path,
-            "red",
-            "blue",
+            widget.topColor == null ? "#2d3436" : "#${widget.topColor}",
+            widget.buttomColor == null ? "#2d3436" : "#${widget.buttomColor}",
             "https:/instagram.com/hussein3li7",
           );
         },
@@ -74,8 +75,6 @@ class _ShareButtonState extends State<ShareButton> {
 
   @override
   Widget build(BuildContext context) {
-    var imgProvider = Provider.of<ImgProvider>(context);
-
     return CircleFloatingButton.floatingActionButton(
       key: key03,
       items: itemsToBodyComplete,

@@ -177,6 +177,8 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                     child: Image.file(
                                       img,
                                       fit: imgStyle.imgBoxFit,
+                                      height: imgHeight,
+                                      width: imgWidth,
                                     ),
                                   );
                                 },
@@ -200,74 +202,6 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                   ),
                                 )
                               : Offstage(),
-
-                          // ClipRRect(
-                          //   borderRadius: BorderRadius.vertical(
-                          //     bottom: Radius.circular(20),
-                          //     //right: Radius.circular(20),
-                          //   ),
-                          //   child: Image.file(
-                          //     img,
-                          //     width: widget.imgWidth / 1.3,
-                          //     height: widget.imgHeight / 1.3,
-                          //     fit: BoxFit.cover,
-                          //   ),
-                          // ),
-
-                          // Container(
-                          //   alignment: Alignment.topLeft,
-                          //   margin: EdgeInsets.all(30),
-                          //   height: 300,
-                          //   width: MediaQuery.of(context).size.width,
-                          //   color: Colors.indigo.shade100,
-                          //   child: Draggable(
-                          //     child: Container(
-                          //       padding: EdgeInsets.only(top: top, left: left),
-                          //       child: DragItem(),
-                          //     ),
-                          //     feedback: Container(
-                          //       padding: EdgeInsets.only(top: top, left: left),
-                          //       child: DragItem(),
-                          //     ),
-                          //     childWhenDragging: Container(
-                          //       padding: EdgeInsets.only(top: top, left: left),
-                          //       child: DragItem(),
-                          //     ),
-                          //     onDragCompleted: () {},
-                          //     onDragEnd: (drag) {
-                          //       setState(() {
-                          //         if ((top + drag.offset.dy) > (300.0 - 30.0)) {
-                          //           top = (300.0 - 30.0);
-                          //         } else if ((top + drag.offset.dy - 30.0) < 0.0) {
-                          //           top = 0;
-                          //         } else {
-                          //           top = top + drag.offset.dy - 30.0;
-                          //         }
-                          //         if ((left + drag.offset.dx) >
-                          //             (MediaQuery.of(context).size.width - 30.0)) {
-                          //           left =
-                          //               (MediaQuery.of(context).size.width - 30.0);
-                          //         } else if ((left + drag.offset.dx - 30.0) < 0.0) {
-                          //           left = 0;
-                          //         } else {
-                          //           left = left + drag.offset.dx - 30.0;
-                          //         }
-                          //       });
-                          //     },
-                          //   ),
-                          // ),
-                          // RaisedButton(onPressed: () async {
-                          //   await _screenshotController.capture().then((image) async {
-                          //     SocialShare.shareInstagramStory(
-                          //       image.path,
-                          //       "blue",
-                          //       "blue",
-                          //       "https://deep-link-url",
-                          //     ).then((data) {
-                          //       print(data);
-                          //     });
-                          //   });
-                          // }),
                         ],
                       ),
                     ),
@@ -405,7 +339,7 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                     },
                                   ),
                                   AnimatedContainer(
-                                    height: enableImageBoxfit ? 200 : 0,
+                                    height: enableImageBoxfit ? 250 : 0,
                                     duration: Duration(milliseconds: 300),
                                     onEnd: () {
                                       setState(() {
@@ -453,6 +387,16 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                                 onPressed: () {
                                                   imgStyle.chageBoxFItImage(
                                                       BoxFit.none);
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.widgets,
+                                                  size: 17,
+                                                ),
+                                                onPressed: () {
+                                                  imgStyle.chageBoxFItImage(
+                                                      BoxFit.fitWidth);
                                                 },
                                               ),
                                             ],
@@ -524,8 +468,10 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          setState(() {
+            showUserName = true;
+          });
           _screenshotController.capture().then((img) {
-            print(img.path);
             Navigator.pop(context, img);
           });
         },

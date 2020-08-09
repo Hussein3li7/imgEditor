@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storesharing/provider/provider.dart';
 import 'GUi/Home/HomeWidget.dart';
+import 'GUi/imgEditor/imgEditorPro/imgEditorPro.dart'; 
 
 void main() => runApp(MyApp());
 
@@ -21,11 +22,14 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (c) => ImgProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (c) => BackGroundImageColor(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        //  home: Drag2(),
-        home: HomeApp(),
+         home: HomeApp(),
+       // home: ImageEditorProClass(),
         title: 'Edite',
         theme: ThemeData(
           appBarTheme: AppBarTheme(

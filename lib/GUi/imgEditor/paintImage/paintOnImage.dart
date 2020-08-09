@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:painter/painter.dart';
@@ -102,7 +102,7 @@ class _PaintOnImageState extends State<PaintOnImage> {
       _finished = true;
     });
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      new CupertinoPageRoute(
         builder: (BuildContext context) {
           return new Scaffold(
             appBar: new AppBar(

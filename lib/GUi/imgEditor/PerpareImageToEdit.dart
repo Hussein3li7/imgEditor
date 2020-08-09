@@ -3,16 +3,22 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:photofilters/filters/filters.dart';
 import 'package:photofilters/filters/preset_filters.dart';
+import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:storesharing/GUi/imgEditor/addFreeTextToImage/AddFreeTextToImage.dart';
 import 'package:storesharing/GUi/imgEditor/editedText/editeTextWidget.dart';
 import 'package:path/path.dart' as p;
 import 'package:image/image.dart' as imageLib;
 import 'package:storesharing/GUi/imgEditor/paintImage/paintOnImage.dart';
+import 'package:storesharing/GUi/imgLiveView/ImgLiveVeiw.dart';
+import 'package:storesharing/GUi/widget/shareButton.dart';
+import 'package:storesharing/provider/provider.dart';
 
 import 'AddFilterToImage.dart';
 
@@ -50,25 +56,110 @@ class _PerpareImageToEditState extends State<PerpareImageToEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Img Editor'),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.save),
+              icon: Icon(Icons.file_download),
               onPressed: () async {
-                ImageGallerySaver.saveFile(img.path)
-                    .then((value) => print('Done Save'));
-                // addTextDialog();
+                await _screenshotController
+                    .capture()
+                    .then((capturedImage) async {
+                  await ImageGallerySaver.saveFile(capturedImage.path)
+                      .then((save) {
+                    print('Image saved ${save.toString()}');
+                  });
+                });
               }),
           IconButton(
               icon: Icon(FontAwesomeIcons.paintBrush),
               onPressed: () async {
-                // addTextDialog();
+                File imgCaptured = await Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (c) => PaintOnImage(
+                      img: img,
+                    ),
+                  ),
+                );
+                if (imgCaptured != null) {
+                  File imgBeforEdit = img;
+                  setState(() {
+                    img = imgCaptured;
+                  });
+                }
               }),
           IconButton(
-              icon: Icon(FontAwesomeIcons.edit),
+              icon: Icon(Icons.text_fields),
               onPressed: () async {
-                // addTextDialog();
+                File edtiedImage = await Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (c) => EditeTextWidget(
+                      img: img,
+                      imgHeight: imgHeight.toDouble(),
+                      imgWidth: imgWidth.toDouble(),
+                    ),
+                  ),
+                );
+                if (edtiedImage != null) {
+                  setState(() {
+                    img = edtiedImage;
+                  });
+                }
               }),
+          IconButton(
+              icon: Icon(Icons.photo_filter),
+              onPressed: () async {
+                fileName = p.basename(img.path);
+                var image = imageLib.decodeImage(img.readAsBytesSync());
+                image = imageLib.copyResize(image, width: 600);
+                File imgFIle = await Navigator.push(
+                  context,
+                  new CupertinoPageRoute(
+                    builder: (context) => new PhotoSelectorToTryFilter(
+                      image: image,
+                      filters: presetFiltersList,
+                      filename: fileName,
+                      loader: Center(child: CircularProgressIndicator()),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                );
+                if (imgFIle != null) {
+                  setState(() {
+                    img = imgFIle;
+                  });
+                }
+              }),
+          IconButton(
+              icon: Icon(Icons.text_format),
+              onPressed: () async {
+                File editedImage = await Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => AddFreeTextToImage(
+                      img: img,
+                    ),
+                  ),
+                );
+                if (editedImage != null) {
+                  setState(() {
+                    img = editedImage;
+                  });
+                }
+              }),
+          IconButton(
+            icon: Icon(Icons.live_tv),
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (c) => LiveViewImage(
+                    img: img,
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: Container(
@@ -93,7 +184,7 @@ class _PerpareImageToEditState extends State<PerpareImageToEdit> {
                   child: Stack(
                     children: <Widget>[
                       Align(
-                        alignment: Alignment.topCenter,
+                        alignment: Alignment.center,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: ClipRRect(
@@ -107,159 +198,175 @@ class _PerpareImageToEditState extends State<PerpareImageToEdit> {
                 ),
               ),
             ),
-            Container(
-              // padding: EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                // borderRadius: BorderRadius.only(
-                //   topLeft: Radius.circular(60),
-                //   topRight: Radius.circular(60),
-                // ),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Column(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 30,
-                              child: Icon(FontAwesomeIcons.textWidth),
-                            ),
-                            Text('اضافة نص'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: GestureDetector(
-                        onTap: () async {
-                          File imgCaptured = await Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (c) => PaintOnImage(
-                                img: img,
-                              ),
-                            ),
-                          );
-                          if (imgCaptured != null) {
-                            File imgBeforEdit = img;
-                            setState(() {
-                              img = imgCaptured;
-                            });
-                          }
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 30,
-                              child: Icon(FontAwesomeIcons.paintBrush),
-                            ),
-                            Text('رسم'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: GestureDetector(
-                        onTap: () async {
-                          File edtiedImage = await Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (c) => EditeTextWidget(
-                                img: img,
-                                imgHeight: imgHeight.toDouble(),
-                                imgWidth: imgWidth.toDouble(),
-                              ),
-                            ),
-                          );
-                          if (edtiedImage != null) {
-                            setState(() {
-                              img = edtiedImage;
-                            });
-                          }
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 30,
-                              child: Icon(Icons.text_fields),
-                            ),
-                            Text('اضافة عنوان'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: GestureDetector(
-                        onTap: () async {
-                          fileName = p.basename(img.path);
-                          var image =
-                              imageLib.decodeImage(img.readAsBytesSync());
-                          image = imageLib.copyResize(image, width: 600);
-                          File imgFIle = await Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                              builder: (context) =>
-                                  new PhotoSelectorToTryFilter(
-                                image: image,
-                                filters: presetFiltersList,
-                                filename: fileName,
-                                loader:
-                                    Center(child: CircularProgressIndicator()),
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          );
+            // Container(
+            //   // padding: EdgeInsets.all(20),
+            //   width: MediaQuery.of(context).size.width,
+            //   alignment: Alignment.center,
+            //   decoration: BoxDecoration(
+            //     color: Colors.black26,
 
-                          if (imgFIle != null) {
-                            setState(() {
-                              img = imgFIle;
-                            });
-                          }
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 30,
-                              child: Icon(Icons.filter),
-                            ),
-                            Text('اضافة فلتر'),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              // child: ListView.builder(
-              //     itemCount: 2,
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (c, i) {
-              //       return InkWell(
-              //         onTap: () {},
-              //         child: Container(
-              //           margin: EdgeInsets.all(6),
-              //           alignment: Alignment.center,
-              //           width: 50,
-              //           decoration: BoxDecoration(
-              //             shape: BoxShape.circle,
-              //             color: Colors.black,
-              //           ),
-              //           child: Text('1'),
-              //         ),
-              //       );
-              //     }),
-            ),
+            //     // borderRadius: BorderRadius.only(
+            //     //   topLeft: Radius.circular(60),
+            //     //   topRight: Radius.circular(60),
+            //     // ),
+            //   ),
+            //   child: SingleChildScrollView(
+            //     scrollDirection: Axis.horizontal,
+            //     child: Row(
+            //       children: <Widget>[
+            //         Padding(
+            //           padding: EdgeInsets.symmetric(horizontal: 10),
+            //           child: GestureDetector(
+            //             onTap: () async {
+            //               File imgCaptured = await Navigator.push(
+            //                 context,
+            //                 CupertinoPageRoute(
+            //                   builder: (c) => PaintOnImage(
+            //                     img: img,
+            //                   ),
+            //                 ),
+            //               );
+            //               if (imgCaptured != null) {
+            //                 File imgBeforEdit = img;
+            //                 setState(() {
+            //                   img = imgCaptured;
+            //                 });
+            //               }
+            //             },
+            //             child: Column(
+            //               children: <Widget>[
+            //                 CircleAvatar(
+            //                   radius: 30,
+            //                   child: Icon(FontAwesomeIcons.paintBrush),
+            //                 ),
+            //                 Text('رسم'),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.symmetric(horizontal: 10),
+            //           child: GestureDetector(
+            //             onTap: () async {
+            //               File edtiedImage = await Navigator.push(
+            //                 context,
+            //                 CupertinoPageRoute(
+            //                   builder: (c) => EditeTextWidget(
+            //                     img: img,
+            //                     imgHeight: imgHeight.toDouble(),
+            //                     imgWidth: imgWidth.toDouble(),
+            //                   ),
+            //                 ),
+            //               );
+            //               if (edtiedImage != null) {
+            //                 setState(() {
+            //                   img = edtiedImage;
+            //                 });
+            //               }
+            //             },
+            //             child: Column(
+            //               children: <Widget>[
+            //                 CircleAvatar(
+            //                   radius: 30,
+            //                   child: Icon(Icons.text_fields),
+            //                 ),
+            //                 Text('اضافة عنوان'),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.symmetric(horizontal: 10),
+            //           child: GestureDetector(
+            //             onTap: () async {
+            //               fileName = p.basename(img.path);
+            //               var image =
+            //                   imageLib.decodeImage(img.readAsBytesSync());
+            //               image = imageLib.copyResize(image, width: 600);
+            //               File imgFIle = await Navigator.push(
+            //                 context,
+            //                 new CupertinoPageRoute(
+            //                   builder: (context) =>
+            //                       new PhotoSelectorToTryFilter(
+            //                     image: image,
+            //                     filters: presetFiltersList,
+            //                     filename: fileName,
+            //                     loader:
+            //                         Center(child: CircularProgressIndicator()),
+            //                     fit: BoxFit.contain,
+            //                   ),
+            //                 ),
+            //               );
+
+            //               if (imgFIle != null) {
+            //                 setState(() {
+            //                   img = imgFIle;
+            //                 });
+            //               }
+            //             },
+            //             child: Column(
+            //               children: <Widget>[
+            //                 CircleAvatar(
+            //                   radius: 30,
+            //                   child: Icon(Icons.photo_filter),
+            //                 ),
+            //                 Text('اضافة فلتر'),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.symmetric(horizontal: 10),
+            //           child: GestureDetector(
+            //             onTap: () async {
+            //               Navigator.push(
+            //                 context,
+            //                 CupertinoPageRoute(
+            //                   builder: (c) => LiveViewImage(
+            //                     img: img,
+            //                   ),
+            //                 ),
+            //               );
+            //             },
+            //             child: Column(
+            //               children: <Widget>[
+            //                 CircleAvatar(
+            //                   radius: 30,
+            //                   child: Icon(Icons.live_tv),
+            //                 ),
+            //                 Text('عرض الصورة'),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.symmetric(horizontal: 10),
+            //           child: GestureDetector(
+            //             onTap: () {
+            //               Navigator.push(
+            //                 context,
+            //                 CupertinoPageRoute(
+            //                   builder: (context) => AddFreeTextToImage(
+            //                     img: img,
+            //                   ),
+            //                 ),
+            //               );
+            //             },
+            //             child: Column(
+            //               children: <Widget>[
+            //                 CircleAvatar(
+            //                   radius: 30,
+            //                   child: Icon(Icons.text_format),
+            //                 ),
+            //                 Text('اضافة نص'),
+            //               ],
+            //             ),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -274,6 +381,9 @@ class _PerpareImageToEditState extends State<PerpareImageToEdit> {
       //         );
       //       }),
       // ),
+      floatingActionButton: ShareButton(
+        img: img,
+      ),
     );
   }
 }

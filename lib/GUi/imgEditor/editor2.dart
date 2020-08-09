@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:photofilters/photofilters.dart';
@@ -28,7 +29,7 @@ class _Editor2State extends State<Editor2> {
     image = imageLib.copyResize(image, width: 600);
     Map imagefile = await Navigator.push(
       context,
-      new MaterialPageRoute(
+      new CupertinoPageRoute(
         builder: (context) => new PhotoFilterSelector(
           title: Text("Photo Filter Example"),
           image: image,
