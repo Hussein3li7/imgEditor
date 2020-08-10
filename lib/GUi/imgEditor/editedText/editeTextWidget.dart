@@ -1,16 +1,13 @@
 import 'dart:io';
 
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
-import 'package:radial_button/widget/circle_floating_button.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:social_share/social_share.dart';
+import 'package:storesharing/GUi/imgEditor/imgEditorPro/te.dart';
 import 'package:storesharing/GUi/widget/googleFontList.dart';
-import 'package:storesharing/GUi/widget/shareButton.dart';
 import 'package:storesharing/provider/provider.dart';
 import 'package:wave_slider/wave_slider.dart';
 
@@ -81,7 +78,7 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                       child: Column(
                         // overflow: Overflow.clip,
                         // fit: StackFit.passthrough,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.all(10),
@@ -117,6 +114,8 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       color: Colors.black,
+                                      fontFamily: fontStyle.fontFamily,
+                                      fontSize: fontStyle.fontSize,
                                     ),
                                     decoration: InputDecoration(
                                       hintText: 'اكتب هنا',
@@ -158,47 +157,51 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                     },
                                   ),
                           ),
-                          Expanded(
-                            child: Container(
-                              width: widget.imgWidth / 1.3,
-                              height: widget.imgHeight / 1.3,
-                              child: GridView.builder(
-                                itemCount: 1,
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    new SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 1,
-                                ),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(20),
-                                    ),
-                                    child: Image.file(
-                                      img,
-                                      fit: imgStyle.imgBoxFit,
-                                      height: imgHeight,
-                                      width: imgWidth,
-                                    ),
-                                  );
-                                },
+                          Container(
+                            alignment: Alignment.topCenter,
+                            width: widget.imgWidth / 1.3,
+                            child: GridView.builder(
+                              itemCount: 1,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  new SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 1,
                               ),
+                              itemBuilder: (BuildContext context, int index) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(20),
+                                  ),
+                                  child: PhotoView(
+                                    imageProvider: FileImage(
+                                      img,
+                                    ),
+                                    //  customSize: Size(imgWidth, imgHeight),
+                                    backgroundDecoration: BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    basePosition: Alignment.center,
+                                    enableRotation: true,
+                                  ),
+                                  // child: Image.file(
+                                  //   img,
+                                  //   fit: imgStyle.imgBoxFit,
+                                  // ),
+                                );
+                              },
                             ),
                           ),
                           showUserName
                               ? Container(
                                   width: MediaQuery.of(context).size.width,
-                                  child: Transform.translate(
-                                    offset: Offset(0, -130),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text('@Hussein3li7'),
-                                        Text('@AppName'),
-                                      ],
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text('@Hussein3li7'),
+                                      Text('@AppName'),
+                                    ],
                                   ),
                                 )
                               : Offstage(),
@@ -240,7 +243,7 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                     Positioned(
                       left: 0,
                       child: Container(
-                        alignment: Alignment.topCenter,
+                        alignment: Alignment.center,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -319,93 +322,6 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.black.withOpacity(.3),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.image_aspect_ratio),
-                                    onPressed: () {
-                                      setState(() {
-                                        showImageBoxfit = false;
-                                        enableImageBoxfit = !enableImageBoxfit;
-                                      });
-                                    },
-                                  ),
-                                  AnimatedContainer(
-                                    height: enableImageBoxfit ? 250 : 0,
-                                    duration: Duration(milliseconds: 300),
-                                    onEnd: () {
-                                      setState(() {
-                                        showImageBoxfit = !showImageBoxfit;
-                                      });
-                                    },
-                                    child: showImageBoxfit
-                                        ? Column(
-                                            children: <Widget>[
-                                              IconButton(
-                                                icon: Icon(
-                                                  FontAwesomeIcons.ad,
-                                                  size: 17,
-                                                ),
-                                                onPressed: () {
-                                                  imgStyle.chageBoxFItImage(
-                                                      BoxFit.fill);
-                                                },
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  Icons.colorize,
-                                                  size: 17,
-                                                ),
-                                                onPressed: () {
-                                                  imgStyle.chageBoxFItImage(
-                                                      BoxFit.contain);
-                                                },
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  Icons.compare,
-                                                  size: 17,
-                                                ),
-                                                onPressed: () {
-                                                  imgStyle.chageBoxFItImage(
-                                                      BoxFit.cover);
-                                                },
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  Icons.delete_sweep,
-                                                  size: 17,
-                                                ),
-                                                onPressed: () {
-                                                  imgStyle.chageBoxFItImage(
-                                                      BoxFit.none);
-                                                },
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  Icons.widgets,
-                                                  size: 17,
-                                                ),
-                                                onPressed: () {
-                                                  imgStyle.chageBoxFItImage(
-                                                      BoxFit.fitWidth);
-                                                },
-                                              ),
-                                            ],
-                                          )
-                                        : Offstage(),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -470,6 +386,7 @@ class _EditeTextWidgetState extends State<EditeTextWidget> {
         onPressed: () {
           setState(() {
             showUserName = true;
+            showAddTextDialog = true;
           });
           _screenshotController.capture().then((img) {
             Navigator.pop(context, img);

@@ -28,7 +28,7 @@ class _AddFreeTextToImageState extends State<AddFreeTextToImage> {
   List<Color> textColors = [];
   List<String> textFonts = [];
   String addTextToWidget = "";
-  bool showAddTextToWidget = false;
+  bool showAddTextToWidget = true;
   bool showColorList = false;
   double _fontSize = 25;
   Color fontColor = Colors.white;

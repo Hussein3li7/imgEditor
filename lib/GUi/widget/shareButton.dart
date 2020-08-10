@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:radial_button/widget/circle_floating_button.dart';
 import 'package:social_share/social_share.dart';
@@ -26,8 +27,6 @@ class _ShareButtonState extends State<ShareButton> {
         heroTag: UniqueKey(),
         backgroundColor: Colors.redAccent,
         onPressed: () async {
-          print(widget.topColor);
-          print(widget.buttomColor);
           SocialShare.shareInstagramStory(
             widget.img.path,
             widget.topColor == null ? "#2d3436" : "#${widget.topColor}",
@@ -40,34 +39,43 @@ class _ShareButtonState extends State<ShareButton> {
       FloatingActionButton(
         heroTag: UniqueKey(),
         backgroundColor: Colors.indigoAccent,
-        onPressed: () {
-          key03.currentState.close();
+        onPressed: () async {
+          SocialShare.shareFacebookStory(
+            widget.img.path,
+            "#ffffff",
+            "#000000",
+            "https://deep-link-url",
+            appId: "174657503423764",
+          );
         },
         child: Icon(FontAwesomeIcons.facebook),
       ),
       FloatingActionButton(
         heroTag: UniqueKey(),
         backgroundColor: Colors.blueAccent,
-        onPressed: () {
-          key03.currentState.close();
+        onPressed: () async{
+         SocialShare.shareWhatsapp('content');
         },
         child: Icon(FontAwesomeIcons.whatsapp),
       ),
       FloatingActionButton(
         heroTag: UniqueKey(),
         backgroundColor: Colors.indigoAccent,
-        onPressed: () {
-          key03.currentState.close();
+        onPressed: () async {
+          SocialShare.shareTwitter('captionText',
+              hashtags: ['a,dd,bs'],
+              trailingText: 'titler',
+              url: 'twitter.com/hussein3li7');
         },
         child: Icon(FontAwesomeIcons.twitter),
       ),
       FloatingActionButton(
         heroTag: UniqueKey(),
         backgroundColor: Colors.indigoAccent,
-        onPressed: () {
-          key03.currentState.close();
+        onPressed: () async {
+          SocialShare.shareOptions('da',imagePath: widget.img.path);
         },
-        child: Icon(FontAwesomeIcons.telegram),
+        child: Icon(FontAwesomeIcons.share),
       ),
     ];
     super.initState();

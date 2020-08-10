@@ -185,8 +185,8 @@ class _PerpareImageToEditState extends State<PerpareImageToEdit> {
                     children: <Widget>[
                       Align(
                         alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Container(
+                          margin: EdgeInsets.all(10),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.file(img),
