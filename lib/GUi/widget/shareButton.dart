@@ -25,7 +25,7 @@ class _ShareButtonState extends State<ShareButton> {
     itemsToBodyComplete = [
       FloatingActionButton(
         heroTag: UniqueKey(),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.indigo,
         onPressed: () async {
           SocialShare.shareInstagramStory(
             widget.img.path,
@@ -40,42 +40,22 @@ class _ShareButtonState extends State<ShareButton> {
         heroTag: UniqueKey(),
         backgroundColor: Colors.indigoAccent,
         onPressed: () async {
+          SocialShare.shareOptions(' ', imagePath: widget.img.path);
+        },
+        child: Icon(FontAwesomeIcons.shareAltSquare),
+      ),
+      FloatingActionButton(
+        heroTag: UniqueKey(),
+        backgroundColor: Colors.blue.shade300,
+        onPressed: () async {
           SocialShare.shareFacebookStory(
             widget.img.path,
-            "#ffffff",
-            "#000000",
-            "https://deep-link-url",
-            appId: "174657503423764",
+            widget.topColor == null ? "#2d3436" : "#${widget.topColor}",
+            widget.buttomColor == null ? "#2d3436" : "#${widget.buttomColor}",
+            "https://www.facebook.com/dialog/share?",
           );
         },
         child: Icon(FontAwesomeIcons.facebook),
-      ),
-      FloatingActionButton(
-        heroTag: UniqueKey(),
-        backgroundColor: Colors.blueAccent,
-        onPressed: () async{
-         SocialShare.shareWhatsapp('content');
-        },
-        child: Icon(FontAwesomeIcons.whatsapp),
-      ),
-      FloatingActionButton(
-        heroTag: UniqueKey(),
-        backgroundColor: Colors.indigoAccent,
-        onPressed: () async {
-          SocialShare.shareTwitter('captionText',
-              hashtags: ['a,dd,bs'],
-              trailingText: 'titler',
-              url: 'twitter.com/hussein3li7');
-        },
-        child: Icon(FontAwesomeIcons.twitter),
-      ),
-      FloatingActionButton(
-        heroTag: UniqueKey(),
-        backgroundColor: Colors.indigoAccent,
-        onPressed: () async {
-          SocialShare.shareOptions('da',imagePath: widget.img.path);
-        },
-        child: Icon(FontAwesomeIcons.share),
       ),
     ];
     super.initState();

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 List<Color> allColors = [
-  Colors.white,
+  Colors.white, 
   Colors.black,
+  Colors.black54,
+  Colors.grey.shade600,
   Colors.red,
   Colors.redAccent,
   Colors.pink,

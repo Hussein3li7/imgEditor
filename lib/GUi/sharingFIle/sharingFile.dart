@@ -71,7 +71,7 @@ class _SharingFileState extends State<SharingFile> {
               ),
               RaisedButton(
                 onPressed: () async {
-                  await screenshotController.capture().then((image) async {
+                  await screenshotController.capture(pixelRatio: 2.9).then((image) async {
                     SocialShare.shareInstagramStorywithBackground(
                       image.path,
                       "#ffffff",
@@ -87,7 +87,7 @@ class _SharingFileState extends State<SharingFile> {
               ),
               RaisedButton(
                 onPressed: () async {
-                  await screenshotController.capture().then((image) async {
+                  await screenshotController.capture(pixelRatio: 2.9).then((image) async {
                     //facebook appId is mandatory for andorid or else share won't work
                     Platform.isAndroid
                         ? SocialShare.shareFacebookStory(image.path, "#ffffff",
@@ -140,7 +140,7 @@ class _SharingFileState extends State<SharingFile> {
               ),
               RaisedButton(
                 onPressed: () async {
-                  await screenshotController.capture().then((image) async {
+                  await screenshotController.capture(pixelRatio: 2.9).then((image) async {
                     SocialShare.shareOptions("Hello world").then((data) {
                       print(data);
                     });

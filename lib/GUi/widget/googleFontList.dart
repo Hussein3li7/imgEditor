@@ -14,8 +14,27 @@ class _GoogleFontListState extends State<GoogleFontList> {
     var setFontStyle = Provider.of<FontProvider>(context);
     List<TextStyle> googleENglishFont = [
       GoogleFonts.lato(),
-      GoogleFonts.cairo(),
-      GoogleFonts.caladea(),
+      GoogleFonts.roboto(),
+      GoogleFonts.openSans(),
+      GoogleFonts.balooTamma(),
+      GoogleFonts.lora(),
+      GoogleFonts.oswald(),
+      GoogleFonts.sourceSansPro(),
+      GoogleFonts.sourceCodePro(),
+      GoogleFonts.montserrat(),
+      GoogleFonts.raleway(),
+      GoogleFonts.ptSans(),
+      GoogleFonts.lora(),
+      GoogleFonts.notoSans(),
+      GoogleFonts.robotoMono(),
+      GoogleFonts.sriracha(),
+      GoogleFonts.chilanka(),
+      GoogleFonts.inconsolata(),
+      GoogleFonts.ptSansNarrow(),
+      GoogleFonts.anton(),
+      GoogleFonts.yanoneKaffeesatz(),
+      GoogleFonts.teko(),
+      GoogleFonts.shadowsIntoLight(),
     ];
     List<TextStyle> googleArabicFont = [
       GoogleFonts.cairo(
@@ -77,32 +96,63 @@ class _GoogleFontListState extends State<GoogleFontList> {
       ),
     ];
     return Container(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: googleArabicFont.map((e) {
-            return GestureDetector(
-              onTap: () {
-                setFontStyle.changeFontStyle(e.fontFamily);
-              },
-              child: Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                margin: EdgeInsets.all(5),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  'خط',
-                  style: e,
-                ),
-              ),
-            );
-          }).toList(),
-        ),
+      child: Column(
+        children: <Widget>[
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: googleArabicFont.map((e) {
+                return GestureDetector(
+                  onTap: () {
+                    setFontStyle.changeFontStyle(e.fontFamily);
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      'خط',
+                      style: e,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: googleENglishFont.map((e) {
+                return GestureDetector(
+                  onTap: () {
+                    setFontStyle.changeFontStyle(e.fontFamily);
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      'font',
+                      style: e,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -51,7 +51,7 @@ class _Drag2State extends State<Drag2> {
                   },
                 ),
                 // RaisedButton(onPressed: () async {
-                //   await _screenshotController.capture().then((image) async {
+                //   await _screenshotController.capture(pixelRatio: 2.9).then((image) async {
                 //     SocialShare.shareInstagramStory(
                 //       image.path,
                 //       "blue",

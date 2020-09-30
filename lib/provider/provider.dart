@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FontProvider with ChangeNotifier {
@@ -52,11 +51,12 @@ class ImgProvider with ChangeNotifier {
 }
 
 class BackGroundImageColor with ChangeNotifier {
-  Color topColor = Colors.red;
-  Color buttomColor = Colors.blue;
-  String topColorStringForStory = "0xffffffff";
-  String buttonColorStringForStory = "0xffffffff";
+  Color topColor = Color(0xff6c5ce7);
+  Color buttomColor = Color(0xff0984e3);
+  String topColorStringForStory = "#6c5ce7";
+  String buttonColorStringForStory = "#0984e3";
   Color fontColor = Colors.white;
+  Color bgColor = Colors.white;
   chageTopBgColor(Color _topColor) {
     topColor = _topColor;
     notifyListeners();
@@ -69,6 +69,11 @@ class BackGroundImageColor with ChangeNotifier {
 
   changeFontColor(Color color) {
     fontColor = color;
+    notifyListeners();
+  }
+
+  changeBGColor(Color color) {
+    bgColor = color;
     notifyListeners();
   }
 

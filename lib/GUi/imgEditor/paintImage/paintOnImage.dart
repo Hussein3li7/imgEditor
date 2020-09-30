@@ -1,16 +1,25 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:painter/painter.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:storesharing/model/admobService.dart';
 
 class PaintOnImage extends StatefulWidget {
   File img;
-  PaintOnImage({@required this.img});
+  double imgHieght;
+  double imgWidth;
+  Uint8List memoryImage;
+  PaintOnImage(
+      {@required this.img,
+      this.memoryImage,
+      @required this.imgHieght,
+      @required this.imgWidth});
   @override
   _PaintOnImageState createState() => new _PaintOnImageState();
 }
@@ -18,13 +27,35 @@ class PaintOnImage extends StatefulWidget {
 class _PaintOnImageState extends State<PaintOnImage> {
   bool _finished;
   PainterController _controller;
-
+//////////////////// code of admob Ads
+  InterstitialAd interstitialAd;
+  BannerAd _bannerAd;
   @override
   void initState() {
     super.initState();
     _finished = false;
     _controller = _newController();
     _controller.backgroundColor = Colors.transparent;
+
+    _bannerAd = AdmobService().myBanner
+      ..load()
+      ..show(
+        anchorType: AnchorType.bottom,
+      );
+    Future.delayed(Duration(seconds: 10), showInterAds);
+  }
+
+  void showInterAds() {
+    interstitialAd = AdmobService().myInterstitial
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _bannerAd.dispose();
   }
 
   PainterController _newController() {
@@ -49,8 +80,10 @@ class _PaintOnImageState extends State<PaintOnImage> {
             if (_controller.isEmpty) {
               showModalBottomSheet(
                   context: context,
-                  builder: (BuildContext context) =>
-                      new Text('التراجع غير ممكن'));
+                  builder: (BuildContext context) => new Text(
+                        'التراجع غير ممكن',
+                        textAlign: TextAlign.center,
+                      ));
             } else {
               _controller.undo();
             }
@@ -62,7 +95,9 @@ class _PaintOnImageState extends State<PaintOnImage> {
       new IconButton(
         icon: new Icon(Icons.check),
         onPressed: () async {
-          await screenshotController.capture().then((imgCaptured) {
+          await screenshotController
+              .capture(pixelRatio: 2.9)
+              .then((imgCaptured) {
             Navigator.pop(context, imgCaptured);
           });
         },
@@ -77,68 +112,27 @@ class _PaintOnImageState extends State<PaintOnImage> {
           preferredSize: new Size(MediaQuery.of(context).size.width, 30.0),
         ),
       ),
-      body: new Center(
-          child: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Screenshot(
-          controller: screenshotController,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.file(widget.img),
-              ),
-              new Painter(_controller),
-            ],
+      body: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: widget.imgHieght / 1.4,
+            maxWidth: widget.imgWidth,
+          ),
+          color: Colors.white,
+          margin: EdgeInsets.only(bottom: 50),
+          child: Screenshot(
+            controller: screenshotController,
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                Image.file(
+                  widget.img,
+                ),
+                new Painter(_controller),
+              ],
+            ),
           ),
         ),
-      )),
-    );
-  }
-
-  void _show(PictureDetails picture, BuildContext context) {
-    setState(() {
-      _finished = true;
-    });
-    Navigator.of(context).push(
-      new CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: const Text('View your image'),
-            ),
-            body: new Container(
-              alignment: Alignment.center,
-              child: new FutureBuilder<Uint8List>(
-                future: picture.toPNG(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        return new Text('Error: ${snapshot.error}');
-                      } else {
-                        return Image.memory(snapshot.data);
-                      }
-                      break;
-                    default:
-                      return new Container(
-                        child: new FractionallySizedBox(
-                          widthFactor: 0.1,
-                          child: new AspectRatio(
-                            aspectRatio: 1.0,
-                            child: new CircularProgressIndicator(),
-                          ),
-                          alignment: Alignment.center,
-                        ),
-                      );
-                  }
-                },
-              ),
-            ),
-          );
-        },
       ),
     );
   }

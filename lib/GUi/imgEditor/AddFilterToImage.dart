@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as imageLib;
 import 'package:path_provider/path_provider.dart';
 import 'package:photofilters/filters/filters.dart';
-
-import 'imageAfterAddEffects.dart';
+import 'package:storesharing/model/admobService.dart';
 
 class AddFilterToImage extends StatelessWidget {
   final imageLib.Image image;
@@ -56,7 +56,6 @@ class AddFilterToImage extends StatelessWidget {
 
 ///The PhotoFilterSelector Widget for apply filter from a selected set of filters
 class PhotoSelectorToTryFilter extends StatefulWidget {
- 
   final Color appBarColor;
   final List<Filter> filters;
   final imageLib.Image image;
@@ -67,7 +66,6 @@ class PhotoSelectorToTryFilter extends StatefulWidget {
   final File filterdImage;
   const PhotoSelectorToTryFilter({
     Key key,
- 
     @required this.filters,
     @required this.image,
     this.appBarColor = Colors.blue,
@@ -89,7 +87,9 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
   imageLib.Image image;
   bool loading;
   File filterdImage;
-
+//////////////////// code of admob Ads
+  InterstitialAd interstitialAd;
+  BannerAd _bannerAd;
   @override
   void initState() {
     super.initState();
@@ -102,13 +102,26 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
       setState(() {
         filterdImage = filterdImage;
       });
-      print(filterdImage.path);
     }
+
+    _bannerAd = AdmobService().myBanner
+      ..load()
+      ..show(
+        anchorType: AnchorType.bottom,
+      );
+    Future.delayed(Duration(seconds: 10), showInterAds);
+  }
+
+  void showInterAds() {
+    interstitialAd = AdmobService().myInterstitial
+      ..load()
+      ..show(anchorType: AnchorType.bottom);
   }
 
   @override
   void dispose() {
     super.dispose();
+    _bannerAd.dispose();
   }
 
   @override
@@ -116,6 +129,7 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           centerTitle: true,
           actions: <Widget>[
             loading
@@ -129,16 +143,6 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
                       var imageFile = await saveFilteredImage();
 
                       Navigator.pop(context, imageFile);
-
-                      // final edtedImage = await Navigator.push(
-                      //   context,
-                      //   CupertinoPageRoute(
-                      //     builder: (c) => ImageAfterEffects(
-                      //       imageFile: imageFile,
-                      //     ),
-                      //   ),
-                      // );
-                      // imageFile = edtedImage;
                     },
                   )
           ],
@@ -157,13 +161,10 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
                         width: double.infinity,
                         height: double.infinity,
                         padding: EdgeInsets.all(12.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: _buildFilteredImage(
-                            _filter,
-                            image,
-                            filename,
-                          ),
+                        child: _buildFilteredImage(
+                          _filter,
+                          image,
+                          filename,
                         ),
                       ),
                     ),
@@ -206,6 +207,14 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
                   ],
                 ),
         ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () async {
+        //     var imageFile = await saveFilteredImage();
+
+        //     Navigator.pop(context, imageFile);
+        //   },
+        //   child: Text('حفظ'),
+        // ),
       ),
     );
   }
@@ -308,7 +317,7 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
                     )
                   : Image.memory(
                       snapshot.data,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                     );
           }
           return null; // unreachable
@@ -330,7 +339,7 @@ class _PhotoSelectorToTryFilterState extends State<PhotoSelectorToTryFilter> {
             )
           : Image.memory(
               cachedFilters[filter?.name ?? "_"],
-              fit: BoxFit.fill,
+              fit: BoxFit.contain,
             );
     }
   }
